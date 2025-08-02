@@ -1,0 +1,33 @@
+name: nodejs-scripting-actions-workflow
+on:
+  push:
+    # # Sequence of patterns matched against refs/tags
+    # tags:
+    #   - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      
+permissions:
+    contents: write
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: "20"
+          
+      - run: npm install -g json-server
+
+      - uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const path = require('node:path');
+            const fullPath = path.join('/user', 'documents', 'file.txt');
+            console.log(fullPath);
